@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
+using UnityEditor;
 using UnityEngine;
 
 public class Grid : MonoBehaviour
@@ -13,7 +14,7 @@ public class Grid : MonoBehaviour
     public LayerMask ObstacleMask;
     Vector3 worldBottomLeft;
    [SerializeField] float nodeDiameter;
-
+    [SerializeField] GameObject test;
     private void Awake()
     {
         CalculateGridSize();
@@ -51,7 +52,9 @@ public class Grid : MonoBehaviour
 
    public Node GetNodeFromWorldPosition(Vector3 worldPosition)
     {
-        return null;
+        int x = Mathf.RoundToInt(worldPosition.x + (GridSize.x / 2) - 1);
+        int y = Mathf.RoundToInt(worldPosition.z + (GridSize.y / 2) - 1);
+        return NodeGrid[x,y];
     }
    public List<Node> GetNeighbors(Node node)
     {
@@ -72,13 +75,21 @@ public class Grid : MonoBehaviour
                 {
                     if (NodeGrid[x, y].IsWalkable)
                     {
+                        Handles.Label(NodeGrid[x, y].WorldPosition, NodeGrid[x, y].WorldPosition.ToString());
                         Gizmos.color = Color.red;
                         Gizmos.DrawWireCube(NodeGrid[x, y].WorldPosition, Vector3.one * (NodeRadius - .2f));
+                       
                     }
                     else
                     {
                         Gizmos.color = Color.black;
                         Gizmos.DrawCube(NodeGrid[x, y].WorldPosition, Vector3.one * (NodeRadius - .2f));
+                    }
+                    Node node = GetNodeFromWorldPosition(test.transform.position);
+                    if (node != null)
+                    {
+                        Gizmos.color = Color.blue;
+                        Gizmos.DrawCube(node.WorldPosition, Vector3.one * (NodeRadius - .2f));
                     }
                 }
             }
