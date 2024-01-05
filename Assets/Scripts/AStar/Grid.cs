@@ -42,7 +42,7 @@ public class Grid : MonoBehaviour
                 Vector3 calculatedWorldPoint = worldBottomLeft + Vector3.right * (x * nodeDiameter + NodeRadius) + Vector3.forward * (y * nodeDiameter + NodeRadius);
                // Vector3 worldPoint = new Vector3(calculatedWorldPoint.x,0, calculatedWorldPoint.y);
 
-                bool isWalkable = Physics.OverlapSphere(calculatedWorldPoint, NodeRadius, ObstacleMask).Length > 0 ? false : true;
+                bool isWalkable = Physics.OverlapSphere(calculatedWorldPoint, NodeRadius/2, ObstacleMask).Length > 0 ? false : true;
               
                 NodeGrid[x, y] = new Node(isWalkable, calculatedWorldPoint, new Vector2Int(x, y));
             }
@@ -58,7 +58,25 @@ public class Grid : MonoBehaviour
     }
    public List<Node> GetNeighbors(Node node)
     {
-        return null;
+        List<Node> neighbors = new List<Node>();
+
+        //checks and adds top neighbor
+        if (node.GridCordinates.x >= 0 && node.GridCordinates.x < GridSize.x && node.GridCordinates.y + 1 >= 0 && node.GridCordinates.y + 1 < GridSize.y)
+            neighbors.Add(NodeGrid[node.GridCordinates.x, node.GridCordinates.y + 1]);
+
+        //checks and adds bottom neighbor
+        if (node.GridCordinates.x >= 0 && node.GridCordinates.x < GridSize.x && node.GridCordinates.y - 1 >= 0 && node.GridCordinates.y - 1 < GridSize.y)
+            neighbors.Add(NodeGrid[node.GridCordinates.x, node.GridCordinates.y - 1]);
+
+        //checks and adds right neighbor
+        if (node.GridCordinates.x + 1 >= 0 && node.GridCordinates.x + 1 < GridSize.x && node.GridCordinates.y >= 0 && node.GridCordinates.y < GridSize.y)
+            neighbors.Add(NodeGrid[node.GridCordinates.x + 1, node.GridCordinates.y]);
+
+        //checks and adds left neighbor
+        if (node.GridCordinates.x - 1 >= 0 && node.GridCordinates.x - 1 < GridSize.x && node.GridCordinates.y >= 0 && node.GridCordinates.y < GridSize.y)
+            neighbors.Add(NodeGrid[node.GridCordinates.x - 1, node.GridCordinates.y]);
+
+        return neighbors;
     }
     private void OnDrawGizmos()
     {
@@ -88,6 +106,12 @@ public class Grid : MonoBehaviour
                     Node node = GetNodeFromWorldPosition(test.transform.position);
                     if (node != null)
                     {
+                    List<Node> nodes=GetNeighbors(node);
+                        foreach(Node N in nodes)
+                        {
+                            Gizmos.color = Color.green;
+                            Gizmos.DrawCube(N.WorldPosition, Vector3.one * (NodeRadius - .2f));
+                        }
                         Gizmos.color = Color.blue;
                         Gizmos.DrawCube(node.WorldPosition, Vector3.one * (NodeRadius - .2f));
                     }
