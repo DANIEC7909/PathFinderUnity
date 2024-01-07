@@ -14,6 +14,7 @@ public class Grid : MonoBehaviour
     public LayerMask ObstacleMask;
     Vector3 worldBottomLeft;
    [SerializeField] float nodeDiameter;
+  public  List<Node> Path= new List<Node>();
     [SerializeField] GameObject test;
     private void Awake()
     {
@@ -93,7 +94,6 @@ public class Grid : MonoBehaviour
                 {
                     if (NodeGrid[x, y].IsWalkable)
                     {
-                        Handles.Label(NodeGrid[x, y].WorldPosition, NodeGrid[x, y].WorldPosition.ToString());
                         Gizmos.color = Color.red;
                         Gizmos.DrawWireCube(NodeGrid[x, y].WorldPosition, Vector3.one * (NodeRadius - .2f));
                        
@@ -114,6 +114,14 @@ public class Grid : MonoBehaviour
                         }
                         Gizmos.color = Color.blue;
                         Gizmos.DrawCube(node.WorldPosition, Vector3.one * (NodeRadius - .2f));
+                    }
+                    if (Path.Count > 0)
+                    {
+                        foreach (Node N in Path)
+                        {
+                            Gizmos.color = Color.magenta;
+                            Gizmos.DrawCube(N.WorldPosition, Vector3.one * (NodeRadius - .2f));
+                        }
                     }
                 }
             }
