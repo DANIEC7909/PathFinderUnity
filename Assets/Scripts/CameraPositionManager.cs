@@ -5,17 +5,26 @@ using UnityEngine;
 public class CameraPositionManager : MonoBehaviour
 {
     RaycastHit PositionRay;
+    Camera CurrentCamera;
     [SerializeField] LayerMask LayerToExclue;
+    private void Awake()
+    {
+        CurrentCamera = Camera.main;
+    }
     void Update()
     {
-      
+        if (Input.GetMouseButton(0))
+        {
+            ProbeCursorToWorldPosition();
+        }
     }
     void ProbeCursorToWorldPosition()
     {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out PositionRay,~LayerToExclue))
+        Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
+        if (Physics.Raycast(ray, out PositionRay,LayerToExclue))
         {
-
+            GameControlller.Instance.PrimaryHero.Move(PositionRay.point);
+            Debug.Log($"hit!{PositionRay.point}");
         }
     }
 }
