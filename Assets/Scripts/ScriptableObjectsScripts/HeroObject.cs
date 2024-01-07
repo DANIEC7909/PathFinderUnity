@@ -8,4 +8,5 @@ public class HeroObject : ScriptableObject
     public Sprite HeroImage;
     public string HeroName;
     public HeroStatistics HeroMaxStatistics;
+    public string PrefabKey;
 }

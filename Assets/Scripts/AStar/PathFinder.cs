@@ -1,4 +1,4 @@
-using System.Collections;
+
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ public class PathFinder : MonoBehaviour
    public Grid Grid;
    public Node SeekerNode;
    public Node TargetNode;
-
+   public List<Node> Path = new List<Node>();
     public void FindPath(Vector3 SeekerPos, Vector3 TargetPos)
     {
         //get player and target position in grid coords
@@ -76,7 +76,7 @@ public class PathFinder : MonoBehaviour
         }
         path.Reverse();
 
-        Grid.Path = path;
+        Path = path;
 
     }
     public int CalculateNodeDistance(Node nodeA, Node nodeB)
