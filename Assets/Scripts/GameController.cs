@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameControlller : Singleton<GameControlller>
+public class GameController : Singleton<GameController>
 {
     public List<Hero> AllSpawnedHeros;
     public Hero PrimaryHero;
