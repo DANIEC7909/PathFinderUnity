@@ -23,8 +23,13 @@ public class CameraPositionManager : MonoBehaviour
         Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out PositionRay,LayerToExclue))
         {
-            GameControlller.Instance.PrimaryHero.Move(PositionRay.point);
+            GameController.Instance.PrimaryHero.Move(PositionRay.point);
+
             Debug.Log($"hit!{PositionRay.point}");
         }
+    }
+    private void OnDrawGizmosSelected()
+    {
+        Gizmos.DrawSphere(PositionRay.point, 2);
     }
 }
