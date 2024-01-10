@@ -1,14 +1,18 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
 public class GameController : Singleton<GameController>
 {
+    public Grid WorldNavigationGrid;
+
+    public HeroObject[] SpawnHeroes;
     public List<Hero> AllSpawnedHeros;
     public Hero PrimaryHero;
 
-    public Grid WorldNavigationGrid; 
-
+    private AsyncOperationHandle<GameObject> HeroAssetHandle;
+    private GameObject HeroToSpawnTemplate;
+    public UIHeroPanel
     #region UnityMethods
     private void Awake()
     {
@@ -16,22 +20,57 @@ public class GameController : Singleton<GameController>
     }
     void Start()
     {
-        
-
+        foreach (HeroObject ho in SpawnHeroes)
+        {
+            SpawnHero(ho);
+        }
+    
     }
-    void Update()
+    
+    private void OnDestroy()
     {
-
+        Addressables.Release(HeroAssetHandle);
     }
     #endregion
+    private void InstantiateAndSetupHero(HeroObject heroObject)
+    {
+        Hero hero = Instantiate(HeroToSpawnTemplate).GetComponent<Hero>();
+        if (!hero)
+        {
+#if DEBUG
+            Debug.LogError($"Loaded Asset cannot be converted to Hero");
+#endif
+            return;
+        }
+        AllSpawnedHeros.Add(hero);
+        hero.SO = heroObject;
+        if (hero.SO == SpawnHeroes[0])
+        {
+            SelectHero(hero);
+        }
+        GameEvents.Instance.c_OnHeroSpawned(hero);
+        if (AllSpawnedHeros.Count == SpawnHeroes.Length)
+        {
+            GameEvents.Instance.c_AllHeroesSpawned();
+        }
+
+    }
     /// <summary>
     /// Spawn hero by it's PrefabKey
     /// </summary>
-    /// <param name="key"></param>
-    public void SpawnHero(string key)
+    /// <param name="hero"></param>
+    public void SpawnHero(HeroObject heroObject)
     {
 
+        if (!HeroToSpawnTemplate)
+        {
+            HeroAssetHandle = Addressables.LoadAssetAsync<GameObject>(heroObject.PrefabKey);
+            HeroAssetHandle.WaitForCompletion();
+            HeroToSpawnTemplate = HeroAssetHandle.Result;
+        }
+        InstantiateAndSetupHero(heroObject);
     }
+
     /// <summary>
     /// Select hero by argument.
     /// </summary>
@@ -46,6 +85,7 @@ public class GameController : Singleton<GameController>
             }
             PrimaryHero = heroToSelect;
             PrimaryHero.IsPrimaryHero = true;
+            GameEvents.Instance.c_OnHeroChanged(PrimaryHero);
         }
         else
         {
