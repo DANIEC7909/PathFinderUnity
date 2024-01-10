@@ -52,7 +52,7 @@ MonoBehaviour:
     Speed: 10
     Health: 0
     Strength: 0
-  IsPrimaryHero: 1
+  IsPrimaryHero: 0
   CurrentNode:
     GCost: 0
     HCost: 0
