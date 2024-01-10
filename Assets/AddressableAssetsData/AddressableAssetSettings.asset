@@ -15,7 +15,7 @@ MonoBehaviour:
   m_DefaultGroup: 131fa56d46f7a6140b29db59ba48ea3c
   m_currentHash:
     serializedVersion: 2
-    Hash: f69e049dcede51a071af843784d8cdea
+    Hash: 00000000000000000000000000000000
   m_OptimizeCatalogSize: 0
   m_BuildRemoteCatalog: 0
   m_BundleLocalCatalog: 0
@@ -88,6 +88,7 @@ MonoBehaviour:
     m_LabelNames:
     - default
     - Hero
+    - HeroSelectionButton
   m_SchemaTemplates: []
   m_GroupTemplateObjects:
   - {fileID: 11400000, guid: ed5d53a5851933a47ad215acbfd41d8e, type: 2}
