@@ -1118,6 +1118,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2127905399}
   - component: {fileID: 2127905398}
+  - component: {fileID: 2127905400}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -1142,10 +1143,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 422ed611c30d5fa4bad843ee5492bcea, type: 2}
   - {fileID: 11400000, guid: 6aac32becd6e241419298e359abb0a6f, type: 2}
   - {fileID: 11400000, guid: 361d0894fe4eb6c4bbd7df4107305f41, type: 2}
-  AllSpawnedHeros:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  AllSpawnedHeros: []
   PrimaryHero: {fileID: 0}
 --- !u!4 &2127905399
 Transform:
@@ -1162,6 +1160,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2127905400
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127905397}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b59ecc5de2138245999b6fd1679c725, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
