@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
+using UnityEngine.EventSystems;
 using UnityEngine.ResourceManagement.AsyncOperations;
 
 public class UIHeroPanel : MonoBehaviour
@@ -9,7 +10,7 @@ public class UIHeroPanel : MonoBehaviour
     [SerializeField] RectTransform ButtonsContainer;
     private AsyncOperationHandle<GameObject> ButtonAssetHandle;
     [SerializeField] GameObject ButtonPrefab;
-  
+   public EventSystem EventSystem;
    
     private void OnEnable()
     {
@@ -18,11 +19,13 @@ public class UIHeroPanel : MonoBehaviour
         ButtonPrefab = ButtonAssetHandle.Result;
         GameEvents.Instance.OnAllHeroesSpawned += RegenerateButtons;
     }
+    private void Start()
+    {
+        GameController.Instance.UIHeroPanel = this;
+    }
 
-    
-  
 
- 
+   
 
     public void RegenerateButtons()
     {

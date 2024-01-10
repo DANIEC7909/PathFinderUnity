@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class CameraPositionManager : MonoBehaviour
 {
     RaycastHit PositionRay;
@@ -20,14 +17,14 @@ public class CameraPositionManager : MonoBehaviour
     }
     void ProbeCursorToWorldPosition()
     {
+
         Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out PositionRay,LayerToExclue))
+        if (Physics.Raycast(ray, out PositionRay, LayerToExclue))
         {
-
             GameController.Instance.PrimaryHero.Move(PositionRay.point);
-
         }
     }
+
     private void OnDrawGizmosSelected()
     {
         Gizmos.DrawSphere(PositionRay.point, 2);

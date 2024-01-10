@@ -567,6 +567,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   HeroesButtons: []
   ButtonsContainer: {fileID: 1096369606}
+  ButtonPrefab: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

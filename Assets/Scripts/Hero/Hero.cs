@@ -10,6 +10,7 @@ public class Hero : MonoBehaviour
     public Node CurrentNode;
     [SerializeField] MeshRenderer HeroRenderer;
     #region UnityMethods
+    int currentHeroIndex;
     private void OnValidate()
     {
         if (PathFinder == null)
@@ -21,11 +22,11 @@ public class Hero : MonoBehaviour
     {
         PathFinder.Grid = GameController.Instance.WorldNavigationGrid;
         HeroRenderer.material = SO.HeroSkin;
+        currentHeroIndex = GameController.Instance.AllSpawnedHeros.IndexOf(this);
     }
     public void Move(Vector3 pos)
     {
         PathFinder.FindPath(transform.position, pos);
-
     }
    
     private void Update()
@@ -49,13 +50,15 @@ public class Hero : MonoBehaviour
             if (GameController.Instance.PrimaryHero != null && GameController.Instance.PrimaryHero.PathFinder.Path.Count > 1)
             {
                 List<Node> neighbors = GameController.Instance.WorldNavigationGrid.GetNeighbors(GameController.Instance.PrimaryHero.CurrentNode);
-                Node selectedNeighborInRangeHero = null;
-                foreach (Node n in neighbors)
+                Node selectedNeighborInRangeHero = neighbors[currentHeroIndex];
+
+                if (!selectedNeighborInRangeHero.IsWalkable)
                 {
-                    if (n.IsWalkable)
+                    int nIndex=default;
+                    while (!selectedNeighborInRangeHero.IsWalkable)
                     {
-                        selectedNeighborInRangeHero = n;
-                        break;
+                        selectedNeighborInRangeHero = neighbors[nIndex];
+                        nIndex++;
                     }
                 }
                 if (selectedNeighborInRangeHero!=null)
@@ -65,6 +68,7 @@ public class Hero : MonoBehaviour
             }
         }
     }
+ 
     #endregion
     private void OnDrawGizmos()
     {

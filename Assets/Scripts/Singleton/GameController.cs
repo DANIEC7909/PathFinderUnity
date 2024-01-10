@@ -12,7 +12,7 @@ public class GameController : Singleton<GameController>
 
     private AsyncOperationHandle<GameObject> HeroAssetHandle;
     private GameObject HeroToSpawnTemplate;
-    public UIHeroPanel
+    public UIHeroPanel UIHeroPanel;
     #region UnityMethods
     private void Awake()
     {
@@ -24,7 +24,6 @@ public class GameController : Singleton<GameController>
         {
             SpawnHero(ho);
         }
-    
     }
     
     private void OnDestroy()
@@ -44,11 +43,22 @@ public class GameController : Singleton<GameController>
         }
         AllSpawnedHeros.Add(hero);
         hero.SO = heroObject;
+       
+        //calculate and set hero values, when is spawned.
+        hero.CurrentHeroStatistics = new HeroStatistics
+        {
+            Speed =Random.Range(1,hero.SO.HeroMaxStatistics.Speed),
+            Strength= Random.Range(1, hero.SO.HeroMaxStatistics.Strength),
+            Health= Random.Range(1, hero.SO.HeroMaxStatistics.Health)
+        };
+
         if (hero.SO == SpawnHeroes[0])
         {
             SelectHero(hero);
         }
+      
         GameEvents.Instance.c_OnHeroSpawned(hero);
+        
         if (AllSpawnedHeros.Count == SpawnHeroes.Length)
         {
             GameEvents.Instance.c_AllHeroesSpawned();
@@ -61,7 +71,6 @@ public class GameController : Singleton<GameController>
     /// <param name="hero"></param>
     public void SpawnHero(HeroObject heroObject)
     {
-
         if (!HeroToSpawnTemplate)
         {
             HeroAssetHandle = Addressables.LoadAssetAsync<GameObject>(heroObject.PrefabKey);
