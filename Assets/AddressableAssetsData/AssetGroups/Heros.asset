@@ -23,6 +23,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Hero
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c28f913935860fd4ead0f598b2730235
+    m_Address: Assets/Prefabs/UI/HeroButton.prefab
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - HeroSelectionButton
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: 12713253028610d42be0fa0a27c67220, type: 2}
   m_SchemaSet:
