@@ -1,7 +1,9 @@
 using System.IO;
 using System.Threading.Tasks;
 using UnityEngine;
-
+/// <summary>
+/// Just showcase that we can swap between multiple saving layer. It can be expanded to save even to the cloud. 
+/// </summary>
 public class JSON_SaveLayer : ISaveLayer
 {
     public async void PraseData(SaveData saveData)

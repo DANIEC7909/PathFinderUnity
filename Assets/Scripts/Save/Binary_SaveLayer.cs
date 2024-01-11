@@ -3,7 +3,9 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using UnityEngine;
-
+/// <summary>
+/// Just showcase that we can swap between multiple saving layer. It can be expanded to save even to the cloud. 
+/// </summary>
 public class Binary_SaveLayer : ISaveLayer
 {
     string path = Application.persistentDataPath;
