@@ -1,11 +1,21 @@
 public class SaveManager : Singleton<SaveManager>
 {
+    public enum SaveLayerSelection { JSON,BINARY};
+    public SaveLayerSelection LayerSelection;
     public ISaveLayer SaveLayer;
 
     public void Awake()
     {
         Init(this);
-        SaveLayer = new JSON_SaveLayer();
+        switch (LayerSelection)
+        {
+            case SaveLayerSelection.JSON:
+                SaveLayer = new JSON_SaveLayer();
+                break;
+            case SaveLayerSelection.BINARY:
+                SaveLayer = new Binary_SaveLayer();
+                break;
+        }
     }
 
     public void Save()
