@@ -8,8 +8,11 @@ public class GameEvents : Singleton<GameEvents>
     #region Delegates
     public delegate void HeroSpawed(Hero spawnedHero);
     public delegate void HeroChanged(Hero changedHero);
-    public delegate void SaveGame();
     public delegate void HeroesSpawned();
+    
+    public delegate void SaveGame(SaveData saveData);
+    public delegate void SaveLoaded(SaveData saveData);
+
     #endregion
     public event HeroesSpawned OnAllHeroesSpawned;
     public void c_AllHeroesSpawned()
@@ -27,5 +30,15 @@ public class GameEvents : Singleton<GameEvents>
     public void c_OnHeroChanged(Hero changedHero)
     {
         OnHeroChanged?.Invoke(changedHero);
+    }
+    public event SaveGame OnGameSaved;
+    public void c_OnGameSaved(SaveData saveData)
+    {
+        OnGameSaved?.Invoke(saveData);
+    }
+    public event SaveLoaded OnSaveLoaded;
+    public void c_OnSaveLoaded(SaveData saveData)
+    {
+        OnSaveLoaded?.Invoke(saveData);
     }
 }
