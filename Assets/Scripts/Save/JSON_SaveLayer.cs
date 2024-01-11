@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 
-public class JSON_SaveLayer : MonoBehaviour
+public class JSON_SaveLayer : ISaveLayer
 {
-    // Start is called before the first frame update
-    void Start()
+    public async void PraseData(SaveData saveData)
     {
-        
+        string JSONData = JsonUtility.ToJson(saveData);
+        Debug.Log(JSONData + " " + Application.persistentDataPath);
+        GameEvents.Instance.c_OnGameSaved(saveData);
+
+        File.WriteAllText(Application.persistentDataPath + @"/Save.json", JSONData);
     }
 
-    // Update is called once per frame
-    void Update()
+    public SaveData ReadData()
     {
-        
+        string JSONData = File.ReadAllText(Application.persistentDataPath + @"/Save.json");
+        return JsonUtility.FromJson<SaveData>(JSONData);
     }
+
 }
