@@ -33,5 +33,6 @@ public class UIHeroButton : MonoBehaviour
     private void OnDestroy()
     {
         GameEvents.Instance.OnHeroChanged -= Instance_OnHeroChanged;
+        button.onClick.RemoveListener(OnClick);
     }
 }

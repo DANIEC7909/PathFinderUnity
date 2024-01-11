@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.EventSystems;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.UI;
 
 public class UIHeroPanel : MonoBehaviour
 {
@@ -11,7 +12,9 @@ public class UIHeroPanel : MonoBehaviour
     private AsyncOperationHandle<GameObject> ButtonAssetHandle;
     [SerializeField] GameObject ButtonPrefab;
    public EventSystem EventSystem;
-   
+
+    [SerializeField] Button SaveButton;
+    [SerializeField] Button LoadButton;
     private void OnEnable()
     {
         ButtonAssetHandle = Addressables.LoadAssetAsync<GameObject>("HeroSelectionButton");
@@ -22,8 +25,11 @@ public class UIHeroPanel : MonoBehaviour
     private void Start()
     {
         GameController.Instance.UIHeroPanel = this;
+        SaveButton.onClick.AddListener(Save);
+        LoadButton.onClick.AddListener(Load);
     }
-
+    public void Save() => SaveManager.Instance.Save();
+    public void Load() => SaveManager.Instance.Load();
 
    
 
@@ -41,5 +47,7 @@ public class UIHeroPanel : MonoBehaviour
     {
         Addressables.Release(ButtonAssetHandle);
         GameEvents.Instance.OnAllHeroesSpawned -= RegenerateButtons;
+        SaveButton.onClick.RemoveListener(SaveManager.Instance.Save);
+        LoadButton.onClick.RemoveListener(SaveManager.Instance.Load);
     }
 }
