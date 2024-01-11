@@ -1,13 +1,20 @@
-
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PathFinder : MonoBehaviour
 {
-   public Grid Grid;
-   public Node SeekerNode;
-   public Node TargetNode;
-   public List<Node> Path = new List<Node>();
+    public Grid Grid;
+    public Node SeekerNode;
+    public Node TargetNode;
+    public List<Node> Path = new List<Node>();
+
+
+
+    public Node selection()
+    {
+        return null;
+    }
+
     public void FindPath(Vector3 SeekerPos, Vector3 TargetPos)
     {
         //get player and target position in grid coords
@@ -17,7 +24,6 @@ public class PathFinder : MonoBehaviour
         List<Node> openSet = new List<Node>();
         HashSet<Node> closedSet = new HashSet<Node>();
         openSet.Add(SeekerNode);
-
         //calculates path for pathfinding
         while (openSet.Count > 0)
         {
@@ -43,7 +49,6 @@ public class PathFinder : MonoBehaviour
                 return;
             }
 
-            //adds neighbor nodes to openSet
             foreach (Node neighbour in Grid.GetNeighbors(node))
             {
                 if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
@@ -62,21 +67,28 @@ public class PathFinder : MonoBehaviour
                         openSet.Add(neighbour);
                 }
             }
+
+
+
+            // Profiler.EndSample();
         }
+        //   Profiler.EndSample();
+        return;
     }
+
     void RetracePath(Node startNode, Node endNode)
     {
-        List<Node> path = new List<Node>();
+        List<Node> retracedPath = new List<Node>();
         Node currentNode = endNode;
 
         while (currentNode != startNode)
         {
-            path.Add(currentNode);
+            retracedPath.Add(currentNode);
             currentNode = currentNode.Parent;
         }
-        path.Reverse();
+        retracedPath.Reverse();
 
-        Path = path;
+        Path = retracedPath;
 
     }
     public int CalculateNodeDistance(Node nodeA, Node nodeB)
