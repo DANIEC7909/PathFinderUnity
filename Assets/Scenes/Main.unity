@@ -680,6 +680,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f7bf65f78edaed4f84e449360d07bc4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LayerSelection: 0
 --- !u!4 &1120750948
 Transform:
   m_ObjectHideFlags: 0
