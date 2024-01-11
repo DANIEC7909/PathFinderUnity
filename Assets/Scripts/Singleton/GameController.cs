@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
+using UnityEngine.SceneManagement;
+
 public class GameController : Singleton<GameController>
 {
     public Grid WorldNavigationGrid;
@@ -13,10 +15,12 @@ public class GameController : Singleton<GameController>
     private AsyncOperationHandle<GameObject> HeroAssetHandle;
     private GameObject HeroToSpawnTemplate;
     public UIHeroPanel UIHeroPanel;
+    public int MapSeed;
     #region UnityMethods
     private void Awake()
     {
         Init(this);
+        SceneManager.LoadScene(1, LoadSceneMode.Additive);
     }
     void Start()
     {
