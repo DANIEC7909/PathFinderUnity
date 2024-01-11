@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 public class GameEvents : Singleton<GameEvents>
 {
    
@@ -13,7 +15,14 @@ public class GameEvents : Singleton<GameEvents>
     public delegate void SaveGame(SaveData saveData);
     public delegate void SaveLoaded(SaveData saveData);
 
+    public delegate void PrimaryHeroPathFound(Node[] path);
     #endregion
+    public event PrimaryHeroPathFound OnPrimaryHeroPathFound;
+    public void c_OnPrimaryHeroPathFound(Node[] path)
+    {
+        OnPrimaryHeroPathFound?.Invoke(path);
+    }
+
     public event HeroesSpawned OnAllHeroesSpawned;
     public void c_AllHeroesSpawned()
     {
