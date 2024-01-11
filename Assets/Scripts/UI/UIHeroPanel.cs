@@ -20,13 +20,13 @@ public class UIHeroPanel : MonoBehaviour
         ButtonAssetHandle = Addressables.LoadAssetAsync<GameObject>("HeroSelectionButton");
         ButtonAssetHandle.WaitForCompletion();
         ButtonPrefab = ButtonAssetHandle.Result;
-        GameEvents.Instance.OnAllHeroesSpawned += RegenerateButtons;
     }
     private void Start()
     {
         GameController.Instance.UIHeroPanel = this;
         SaveButton.onClick.AddListener(Save);
         LoadButton.onClick.AddListener(Load);
+        GameEvents.Instance.OnAllHeroesSpawned += RegenerateButtons;
     }
     public void Save() => SaveManager.Instance.Save();
     public void Load() => SaveManager.Instance.Load();
