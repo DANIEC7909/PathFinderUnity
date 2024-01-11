@@ -10,7 +10,7 @@ public class CameraPositionManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButtonDown(0))
         {
             ProbeCursorToWorldPosition();
         }
@@ -20,7 +20,10 @@ public class CameraPositionManager : MonoBehaviour
         Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out PositionRay, LayerToExclue))
         {
-            GameController.Instance.PrimaryHero.Move(PositionRay.point);
+            if (PositionRay.collider.gameObject.layer != LayerMask.NameToLayer("Obstacle"))
+            {
+                GameController.Instance.PrimaryHero.Move(PositionRay.point);
+            }
         }
     }
 
