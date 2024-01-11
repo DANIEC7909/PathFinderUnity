@@ -8,15 +8,17 @@ public class JSON_SaveLayer : ISaveLayer
     {
         string JSONData = JsonUtility.ToJson(saveData);
         Debug.Log(JSONData + " " + Application.persistentDataPath);
-        GameEvents.Instance.c_OnGameSaved(saveData);
 
       await  File.WriteAllTextAsync(Application.persistentDataPath + @"/Save.json", JSONData);
+        GameEvents.Instance.c_OnGameSaved(saveData);
     }
 
     public SaveData ReadData()
     {
         string JSONData = File.ReadAllText(Application.persistentDataPath + @"/Save.json");
-        return JsonUtility.FromJson<SaveData>(JSONData);
+     SaveData data = JsonUtility.FromJson<SaveData>(JSONData);
+        GameEvents.Instance.c_OnSaveLoaded(data);
+        return data;
     }
 
 }
