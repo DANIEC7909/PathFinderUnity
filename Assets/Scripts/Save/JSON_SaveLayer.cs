@@ -1,4 +1,5 @@
 using System.IO;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class JSON_SaveLayer : ISaveLayer
@@ -9,7 +10,7 @@ public class JSON_SaveLayer : ISaveLayer
         Debug.Log(JSONData + " " + Application.persistentDataPath);
         GameEvents.Instance.c_OnGameSaved(saveData);
 
-        File.WriteAllText(Application.persistentDataPath + @"/Save.json", JSONData);
+      await  File.WriteAllTextAsync(Application.persistentDataPath + @"/Save.json", JSONData);
     }
 
     public SaveData ReadData()
