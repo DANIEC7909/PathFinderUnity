@@ -13,7 +13,7 @@ public class Binary_SaveLayer : ISaveLayer
         {
             Parallel.Invoke(() =>
             {
-                System.IO.Stream ms = File.OpenWrite(path + @"/Savebin.pfbin");
+                System.IO.Stream ms = File.OpenWrite(path + @"/Save.pfbin");
 
                 BinaryFormatter formatter = new BinaryFormatter();
                 //It serialize the employee object  
@@ -30,7 +30,7 @@ public class Binary_SaveLayer : ISaveLayer
     {
         BinaryFormatter formatter = new BinaryFormatter();
 
-        FileStream fs = File.Open(path + @"/Savebin.pfbin", FileMode.Open);
+        FileStream fs = File.Open(path + @"/Save.pfbin", FileMode.Open);
 
         object obj = formatter.Deserialize(fs);
         SaveData data = (SaveData)obj;
