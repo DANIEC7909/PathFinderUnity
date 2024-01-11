@@ -17,7 +17,6 @@ public class CameraPositionManager : MonoBehaviour
     }
     void ProbeCursorToWorldPosition()
     {
-
         Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out PositionRay, LayerToExclue))
         {
