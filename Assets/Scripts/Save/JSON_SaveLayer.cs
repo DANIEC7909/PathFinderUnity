@@ -9,8 +9,7 @@ public class JSON_SaveLayer : ISaveLayer
     public async void PraseData(SaveData saveData)
     {
         string JSONData = JsonUtility.ToJson(saveData);
-        Debug.Log(JSONData + " " + Application.persistentDataPath);
-
+       
       await  File.WriteAllTextAsync(Application.persistentDataPath + @"/Save.json", JSONData);
         GameEvents.Instance.c_OnGameSaved(saveData);
     }

@@ -22,7 +22,7 @@ public class Grid : MonoBehaviour
     }
    
    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-   public void CalculateGridSize()
+   private void CalculateGridSize()
    {
         nodeDiameter = Mathf.Pow(NodeRadius, 2);
 
@@ -49,14 +49,15 @@ public class Grid : MonoBehaviour
         }
     
     }
-
-   public Node GetNodeFromWorldPosition(Vector3 worldPosition)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Node GetNodeFromWorldPosition(Vector3 worldPosition)
     {
         int x = Mathf.RoundToInt(worldPosition.x + (GridSize.x / 2) - 1);
         int y = Mathf.RoundToInt(worldPosition.z + (GridSize.y / 2) - 1);
         return NodeGrid[x,y];
     }
-   public List<Node> GetNeighbors(Node node)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public List<Node> GetNeighbors(Node node)
     {
         List<Node> neighbors = new List<Node>();
 

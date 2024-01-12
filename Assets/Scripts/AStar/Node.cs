@@ -25,6 +25,5 @@ public class Node
         {
             return GCost + HCost;
         }
-
     }
 }

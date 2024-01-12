@@ -6,13 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class GameController : Singleton<GameController>
 {
-    public Grid WorldNavigationGrid;
-
-    public HeroObject[] SpawnHeroes;
     public List<Hero> AllSpawnedHeros;
     public Hero PrimaryHero;
-
+    public Grid WorldNavigationGrid;
     private AsyncOperationHandle<GameObject> HeroAssetHandle;
+
+    public HeroObject[] HerosToSpawn;
+
     private GameObject HeroToSpawnTemplate;
     public UIHeroPanel UIHeroPanel;
     public int MapSeed;
@@ -24,7 +24,7 @@ public class GameController : Singleton<GameController>
     }
     void Start()
     {
-        foreach (HeroObject ho in SpawnHeroes)
+        foreach (HeroObject ho in HerosToSpawn)
         {
             SpawnHero(ho);
         }
@@ -56,14 +56,14 @@ public class GameController : Singleton<GameController>
             Health= Random.Range(1, hero.SO.HeroMaxStatistics.Health)
         };
 
-        if (hero.SO == SpawnHeroes[0])
+        if (hero.SO == HerosToSpawn[0])
         {
             SelectHero(hero);
         }
       
         GameEvents.Instance.c_OnHeroSpawned(hero);
         
-        if (AllSpawnedHeros.Count == SpawnHeroes.Length)
+        if (AllSpawnedHeros.Count == HerosToSpawn.Length)
         {
             GameEvents.Instance.c_AllHeroesSpawned();
         }
@@ -102,9 +102,9 @@ public class GameController : Singleton<GameController>
         }
         else
         {
-            #region DEBUG 
+#if DEBUG 
             Debug.LogError($"Hero not containd in {nameof(AllSpawnedHeros)} registry.");
-            #endregion
+#endif
         }
     }
 }

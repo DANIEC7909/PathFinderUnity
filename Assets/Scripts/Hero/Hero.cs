@@ -9,27 +9,12 @@ public class Hero : MonoBehaviour
     public PathFinder PathFinder;
     public HeroStatistics CurrentHeroStatistics;
     public bool IsPrimaryHero;
-    public Node CurrentNode;
     [SerializeField] MeshRenderer HeroRenderer;
-    #region UnityMethods
-    int currentHeroIndex;
+    public Node CurrentNode;
     Node LastPrimaryHeroNode;
     [SerializeField] TextMeshPro statsDisplay;
-    public bool IsHeroFisnishedPath
-    {
-        get
-        {
-            if ((CurrentNode != null && PathFinder.SeekerNode != null) && CurrentNode == PathFinder.SeekerNode)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        private set { }
-    }
+
+    #region UnityMethods
     private void OnValidate()
     {
         if (PathFinder == null)
@@ -41,7 +26,6 @@ public class Hero : MonoBehaviour
     {
         PathFinder.Grid = Instantiate(GameController.Instance.WorldNavigationGrid);
         HeroRenderer.material = SO.HeroSkin;
-        currentHeroIndex = GameController.Instance.AllSpawnedHeros.IndexOf(this);
         if (statsDisplay)
             statsDisplay.color = Random.ColorHSV();
     }
@@ -50,16 +34,21 @@ public class Hero : MonoBehaviour
 
     public void Move(Vector3 pos)
     {
-        FindPath(transform.position,pos);
+        FindPathAsync(transform.position,pos);
         GameEvents.Instance.c_OnPrimaryHeroPathFound(PathFinder.Path.ToArray());
     }
 
     private void Update()
     {
-        Profiler.BeginSample(".GetNodeFromWorldPosition");
-        CurrentNode = PathFinder.Grid.GetNodeFromWorldPosition(transform.position);
-        Profiler.EndSample();
-        if (PathFinder.Path.Count >= 1)
+        if (!PathFinder.Grid)
+        {
+#if DEBUG
+            Debug.LogError("Grid Of Pathfinder is null");
+#endif
+            return;
+        }
+            CurrentNode = PathFinder.Grid.GetNodeFromWorldPosition(transform.position);
+         if (PathFinder.Path.Count >= 1)
         {
             transform.position = Vector3.MoveTowards(transform.position, PathFinder.Path[0].WorldPosition, Time.deltaTime * CurrentHeroStatistics.Speed);
 
@@ -75,7 +64,7 @@ public class Hero : MonoBehaviour
             {
                 if (GameController.Instance.PrimaryHero != null)
                 {
-                    CalcPath(transform.position);
+                    CalcPathAsync(transform.position);
                 }
             }
         }
@@ -83,18 +72,17 @@ public class Hero : MonoBehaviour
             statsDisplay.text = "Speed=" + CurrentHeroStatistics.Speed.ToString() + System.Environment.NewLine + "Strength =" + CurrentHeroStatistics.Strength.ToString() + System.Environment.NewLine + "Health =" + CurrentHeroStatistics.Health.ToString();
 
     }
-    public async void FindPath(Vector3 CurrentPos, Vector3 TargetPos)
+    public async void FindPathAsync(Vector3 CurrentPos, Vector3 TargetPos)
     {
         await Task.Run(() =>
         {
             Parallel.Invoke(() =>
             {
-
-                PathFinder.FindPath(CurrentPos, TargetPos);
+             PathFinder.FindPath(CurrentPos, TargetPos);
             });
         });
     }
-    public async void CalcPath(Vector3 pos)
+    public async void CalcPathAsync(Vector3 pos)
     {
         await Task.Run(() =>
         {
@@ -106,14 +94,17 @@ public class Hero : MonoBehaviour
                 System.Random rand = new System.Random();
 
                 Node selectedNeighborInRangeHero = neighbors[rand.Next(0, neighbors.Length - 1)];
-              FindPath(pos, selectedNeighborInRangeHero.WorldPosition);
+              FindPathAsync(pos, selectedNeighborInRangeHero.WorldPosition);
                 LastPrimaryHeroNode = GameController.Instance.PrimaryHero.CurrentNode;
             });
         });
     }
     private void OnDestroy()
     {
-        Destroy(PathFinder.Grid.gameObject);
+        if (PathFinder.Grid != null)
+        {
+            Destroy(PathFinder.Grid.gameObject);
+        }
     }
     #endregion
     private void OnDrawGizmos()

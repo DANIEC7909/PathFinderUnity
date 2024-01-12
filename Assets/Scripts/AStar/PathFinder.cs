@@ -9,12 +9,6 @@ public class PathFinder : MonoBehaviour
     public List<Node> Path = new List<Node>();
 
 
-
-    public Node selection()
-    {
-        return null;
-    }
-
     public void FindPath(Vector3 SeekerPos, Vector3 TargetPos)
     {
         //get player and target position in grid coords
@@ -45,7 +39,7 @@ public class PathFinder : MonoBehaviour
             //If target found, retrace path
             if (node == TargetNode)
             {
-                RetracePath(SeekerNode, TargetNode);
+                TracePath(SeekerNode, TargetNode);
                 return;
             }
 
@@ -76,7 +70,7 @@ public class PathFinder : MonoBehaviour
         return;
     }
 
-    void RetracePath(Node startNode, Node endNode)
+    void TracePath(Node startNode, Node endNode)
     {
         List<Node> retracedPath = new List<Node>();
         Node currentNode = endNode;
