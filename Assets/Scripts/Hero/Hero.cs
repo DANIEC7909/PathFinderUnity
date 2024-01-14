@@ -1,7 +1,6 @@
 using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Profiling;
 
 public class Hero : MonoBehaviour
 {
@@ -34,7 +33,7 @@ public class Hero : MonoBehaviour
 
     public void Move(Vector3 pos)
     {
-        FindPathAsync(transform.position,pos);
+        PathFinder.FindPath(transform.position, pos);
         GameEvents.Instance.c_OnPrimaryHeroPathFound(PathFinder.Path.ToArray());
     }
 
@@ -47,8 +46,8 @@ public class Hero : MonoBehaviour
 #endif
             return;
         }
-            CurrentNode = PathFinder.Grid.GetNodeFromWorldPosition(transform.position);
-         if (PathFinder.Path.Count >= 1)
+        CurrentNode = PathFinder.Grid.GetNodeFromWorldPosition(transform.position);
+        if (PathFinder.Path.Count >= 1)
         {
             transform.position = Vector3.MoveTowards(transform.position, PathFinder.Path[0].WorldPosition, Time.deltaTime * CurrentHeroStatistics.Speed);
 
@@ -64,7 +63,7 @@ public class Hero : MonoBehaviour
             {
                 if (GameController.Instance.PrimaryHero != null)
                 {
-                    CalcPathAsync(transform.position);
+                    CalculateNeighbourPath(transform.position);
                 }
             }
         }
@@ -72,31 +71,21 @@ public class Hero : MonoBehaviour
             statsDisplay.text = "Speed=" + CurrentHeroStatistics.Speed.ToString() + System.Environment.NewLine + "Strength =" + CurrentHeroStatistics.Strength.ToString() + System.Environment.NewLine + "Health =" + CurrentHeroStatistics.Health.ToString();
 
     }
-    public async void FindPathAsync(Vector3 CurrentPos, Vector3 TargetPos)
-    {
-        await Task.Run(() =>
-        {
-            Parallel.Invoke(() =>
-            {
-             PathFinder.FindPath(CurrentPos, TargetPos);
-            });
-        });
-    }
-    public async void CalcPathAsync(Vector3 pos)
-    {
-        await Task.Run(() =>
-        {
-            Parallel.Invoke(() =>
-            {
-                //converting Node from Primary HeroGrid to this Hero.
-                Node[] neighbors = PathFinder.Grid.GetNeighbors(PathFinder.Grid.GetNodeFromWorldPosition(GameController.Instance.PrimaryHero.CurrentNode.WorldPosition)).ToArray();
-              
-                System.Random rand = new System.Random();
 
-                Node selectedNeighborInRangeHero = neighbors[rand.Next(0, neighbors.Length - 1)];
-              FindPathAsync(pos, selectedNeighborInRangeHero.WorldPosition);
-                LastPrimaryHeroNode = GameController.Instance.PrimaryHero.CurrentNode;
-            });
+    public async void CalculateNeighbourPath(Vector3 pos)
+    {
+        await Task.Run(() =>
+        {
+
+            //Conversion from primary hero grid to this hero grid.
+            Node[] neighbors = PathFinder.Grid.GetNeighbours(PathFinder.Grid.GetNodeFromWorldPosition(GameController.Instance.PrimaryHero.CurrentNode.WorldPosition)).ToArray();
+
+            System.Random rand = new System.Random();
+
+            Node selectedNeighborInRangeHero = neighbors[rand.Next(0, neighbors.Length - 1)];
+            PathFinder.FindPath(pos, selectedNeighborInRangeHero.WorldPosition);
+            LastPrimaryHeroNode = GameController.Instance.PrimaryHero.CurrentNode;
+
         });
     }
     private void OnDestroy()

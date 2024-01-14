@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class PathFinder : MonoBehaviour
@@ -7,67 +8,64 @@ public class PathFinder : MonoBehaviour
     public Node SeekerNode;
     public Node TargetNode;
     public List<Node> Path = new List<Node>();
+    
 
-
-    public void FindPath(Vector3 SeekerPos, Vector3 TargetPos)
+    public async void FindPath(Vector3 SeekerPos, Vector3 TargetPos)
     {
-        //get player and target position in grid coords
-        SeekerNode = Grid.GetNodeFromWorldPosition(SeekerPos);
-        TargetNode = Grid.GetNodeFromWorldPosition(TargetPos);
-
-        List<Node> openSet = new List<Node>();
-        HashSet<Node> closedSet = new HashSet<Node>();
-        openSet.Add(SeekerNode);
-        //calculates path for pathfinding
-        while (openSet.Count > 0)
+        await Task.Run(() =>
         {
+                //get player and target position in grid coords
+                SeekerNode = Grid.GetNodeFromWorldPosition(SeekerPos);
+                TargetNode = Grid.GetNodeFromWorldPosition(TargetPos);
 
-            //iterates through openSet and finds lowest FCost
-            Node node = openSet[0];
-            for (int i = 1; i < openSet.Count; i++)
-            {
-                if (openSet[i].FCost <= node.FCost)
+                List<Node> openSet = new List<Node>();
+                HashSet<Node> closedSet = new HashSet<Node>();
+                openSet.Add(SeekerNode);
+                //calculates path for pathfinding
+                while (openSet.Count > 0)
                 {
-                    if (openSet[i].HCost < node.HCost)
-                        node = openSet[i];
+
+                    //iterates through openSet and finds lowest FCost
+                    Node node = openSet[0];
+                    for (int i = 1; i < openSet.Count; i++)
+                    {
+                        if (openSet[i].FCost <= node.FCost)
+                        {
+                            if (openSet[i].HCost < node.HCost)
+                                node = openSet[i];
+                        }
+                    }
+
+                    openSet.Remove(node);
+                    closedSet.Add(node);
+
+                    //If target found, retrace path
+                    if (node == TargetNode)
+                    {
+                        TracePath(SeekerNode, TargetNode);
+                        return;
+                    }
+
+                    foreach (Node neighbour in Grid.GetNeighbours(node))
+                    {
+                        if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
+                        {
+                            continue;
+                        }
+
+                        int newCostToNeighbour = node.GCost + CalculateNodeDistance(node, neighbour);
+                        if (newCostToNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
+                        {
+                            neighbour.GCost = newCostToNeighbour;
+                            neighbour.HCost = CalculateNodeDistance(neighbour, TargetNode);
+                            neighbour.Parent = node;
+
+                            if (!openSet.Contains(neighbour))
+                                openSet.Add(neighbour);
+                        }
+                    }
                 }
-            }
-
-            openSet.Remove(node);
-            closedSet.Add(node);
-
-            //If target found, retrace path
-            if (node == TargetNode)
-            {
-                TracePath(SeekerNode, TargetNode);
-                return;
-            }
-
-            foreach (Node neighbour in Grid.GetNeighbors(node))
-            {
-                if (!neighbour.IsWalkable || closedSet.Contains(neighbour))
-                {
-                    continue;
-                }
-
-                int newCostToNeighbour = node.GCost + CalculateNodeDistance(node, neighbour);
-                if (newCostToNeighbour < neighbour.GCost || !openSet.Contains(neighbour))
-                {
-                    neighbour.GCost = newCostToNeighbour;
-                    neighbour.HCost = CalculateNodeDistance(neighbour, TargetNode);
-                    neighbour.Parent = node;
-
-                    if (!openSet.Contains(neighbour))
-                        openSet.Add(neighbour);
-                }
-            }
-
-
-
-            // Profiler.EndSample();
-        }
-        //   Profiler.EndSample();
-        return;
+        });
     }
 
     void TracePath(Node startNode, Node endNode)
