@@ -57,7 +57,7 @@ public class Grid : MonoBehaviour
         return NodeGrid[x,y];
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public List<Node> GetNeighbors(Node node)
+    public List<Node> GetNeighbours(Node node)
     {
         List<Node> neighbors = new List<Node>();
 
