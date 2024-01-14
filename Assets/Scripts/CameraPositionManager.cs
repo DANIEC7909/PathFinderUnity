@@ -3,7 +3,7 @@ public class CameraPositionManager : MonoBehaviour
 {
     RaycastHit PositionRay;
     Camera CurrentCamera;
-    [SerializeField] LayerMask LayerToExclue;
+   
     private void Awake()
     {
         CurrentCamera = Camera.main;
@@ -18,7 +18,7 @@ public class CameraPositionManager : MonoBehaviour
     void ProbeCursorToWorldPosition()
     {
         Ray ray = CurrentCamera.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out PositionRay, LayerToExclue))
+        if (Physics.Raycast(ray, out PositionRay))
         {
             if (PositionRay.collider.gameObject.layer != LayerMask.NameToLayer("Obstacle"))
             {
