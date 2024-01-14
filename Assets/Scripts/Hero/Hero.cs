@@ -23,20 +23,13 @@ public class Hero : MonoBehaviour
     }
     private void Start()
     {
+        //make own istance of NodeGrid.
         PathFinder.Grid = Instantiate(GameController.Instance.WorldNavigationGrid);
+        
         HeroRenderer.material = SO.HeroSkin;
         if (statsDisplay)
             statsDisplay.color = Random.ColorHSV();
     }
-
-
-
-    public void Move(Vector3 pos)
-    {
-        PathFinder.FindPath(transform.position, pos);
-        GameEvents.Instance.c_OnPrimaryHeroPathFound(PathFinder.Path.ToArray());
-    }
-
     private void Update()
     {
         if (!PathFinder.Grid)
@@ -71,7 +64,21 @@ public class Hero : MonoBehaviour
             statsDisplay.text = "Speed=" + CurrentHeroStatistics.Speed.ToString() + System.Environment.NewLine + "Strength =" + CurrentHeroStatistics.Strength.ToString() + System.Environment.NewLine + "Health =" + CurrentHeroStatistics.Health.ToString();
 
     }
-
+    private void OnDestroy()
+    {
+        if (PathFinder.Grid != null)
+        {
+            Destroy(PathFinder.Grid.gameObject);
+        }
+    }
+    private void OnDrawGizmos()
+    {
+        if (CurrentNode != null)
+        {
+            Gizmos.DrawCube(CurrentNode.WorldPosition, Vector3.one * .8f);
+        }
+    }
+    #endregion
     public async void CalculateNeighbourPath(Vector3 pos)
     {
         await Task.Run(() =>
@@ -88,19 +95,9 @@ public class Hero : MonoBehaviour
 
         });
     }
-    private void OnDestroy()
+    public void Move(Vector3 pos)
     {
-        if (PathFinder.Grid != null)
-        {
-            Destroy(PathFinder.Grid.gameObject);
-        }
-    }
-    #endregion
-    private void OnDrawGizmos()
-    {
-        if (CurrentNode != null)
-        {
-            Gizmos.DrawCube(CurrentNode.WorldPosition, Vector3.one * .8f);
-        }
+        PathFinder.FindPath(transform.position, pos);
+        GameEvents.Instance.c_OnPrimaryHeroPathFound(PathFinder.Path.ToArray());
     }
 }
