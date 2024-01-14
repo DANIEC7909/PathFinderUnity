@@ -13,8 +13,6 @@ public class Binary_SaveLayer : ISaveLayer
     {
         await Task.Run(() =>
         {
-            Parallel.Invoke(() =>
-            {
                 System.IO.Stream ms = File.OpenWrite(path + @"/Save.pfbin");
 
                 BinaryFormatter formatter = new BinaryFormatter();
@@ -24,7 +22,6 @@ public class Binary_SaveLayer : ISaveLayer
                 ms.Close();
                 ms.Dispose();
                 GameEvents.Instance.c_OnGameSaved(saveData);
-            });
         });
     }
 
